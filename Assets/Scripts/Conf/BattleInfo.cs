@@ -13,7 +13,7 @@ namespace Conf
             public int SpawnY;
         }
         
-        public readonly List<Entry> Units = new List<Entry>();
+        public readonly List<Entry> Units = new ();
 
         protected void AddBlue(UnitInfo info, int spawnX, int spawnY)
         {

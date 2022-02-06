@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class LibraryCatalog
 {
-    private readonly Dictionary<LibraryCatalogNames, GameObject> _all = new Dictionary<LibraryCatalogNames, GameObject>();
-    private readonly Dictionary<LibraryCatalogNames, string> _path = new Dictionary<LibraryCatalogNames, string>();
+    private readonly Dictionary<LibraryCatalogNames, GameObject> _all = new ();
+    private readonly Dictionary<LibraryCatalogNames, string> _path = new ();
 
     
     public LibraryCatalog()

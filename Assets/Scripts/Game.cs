@@ -5,25 +5,14 @@ using Conf;
 using Core;
 using UnityEngine;
 using UnityEngine.UI;
-using View;
 
 public class Game : MonoBehaviour
 {
-    [SerializeField] private Transform _unitContainer = default;
-    [SerializeField] private Button _button = default;
+    [SerializeField] private Transform _unitContainer;
+    [SerializeField] private Button _button;
     
     private IBattle _battle;
     
-    /*private void Awake()
-    {
-        UnitView.Preload();
-        
-        _battle = new Battle(_unitContainer);
-        _button.onClick.AddListener(GameStart);
-        
-        GameStart();
-    }*/
-
     private void GameStart()
     {
         _button.gameObject.SetActive(false);
@@ -55,11 +44,7 @@ public class Game : MonoBehaviour
     
     public async Task Load(CancellationToken ct)
     {
-        //await UnitView.Preload(ct);
-        
         _battle = new Battle(_unitContainer);
         _button.onClick.AddListener(GameStart);
-        
-        GameStart();
     }
 }

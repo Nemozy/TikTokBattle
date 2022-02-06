@@ -9,7 +9,7 @@ namespace View
     {
         public static UnitView Create(TeamFlag teamFlag, Transform parent)
         {
-            GameObject unit = null;
+            GameObject unit;
             switch (teamFlag)
             {
                 case TeamFlag.Blue:

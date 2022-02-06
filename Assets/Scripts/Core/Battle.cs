@@ -9,8 +9,8 @@ namespace Core
 {
     public class Battle : ICore, IBattle
     {
-        private readonly MapGrid<Unit> _grid = new MapGrid<Unit>();
-        private readonly List<Unit> _units = new List<Unit>();
+        private readonly MapGrid<Unit> _grid = new ();
+        private readonly List<Unit> _units = new ();
         private readonly Transform _container;
     
         public Battle(Transform container)

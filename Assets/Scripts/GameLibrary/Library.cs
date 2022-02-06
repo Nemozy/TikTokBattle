@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Library
 {
-    private static readonly List<LibraryEntity> All = new List<LibraryEntity>();
+    private static readonly List<LibraryEntity> All = new ();
     
     public static async Task Load(CancellationToken ct)
     {

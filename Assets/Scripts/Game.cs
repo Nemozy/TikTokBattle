@@ -35,7 +35,7 @@ public class Game : MonoBehaviour
         }
         GameOver();
     }
-
+    
     private void OnApplicationQuit()
     {
         _button.onClick.RemoveListener(GameStart);

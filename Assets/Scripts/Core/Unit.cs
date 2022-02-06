@@ -24,10 +24,11 @@ namespace Core
         private int _destX;
         private int _destY;
         
-        public readonly UnitView View;
+        //public readonly UnitView View;
         
         public TeamFlag Team { get; }
         
+        public int Id { get; }
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -37,7 +38,7 @@ namespace Core
         public int Mana { get; private set; }
         public int Speed => _info.Speed;
 
-        public Unit(TeamFlag team, UnitInfo info, UnitView view, Battle battle)
+        public Unit(TeamFlag team, UnitInfo info, Battle battle, int id)
         {
             Team = team;
             _info = info;
@@ -47,9 +48,10 @@ namespace Core
             
             _logic = UnitLogicFactory.Create(info, this, battle);
             
-            View = view;
+            //View = view;
             _battle = battle;
             _state = State.Spawn;
+            Id = id;
         }
 
         public void Tick()

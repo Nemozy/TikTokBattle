@@ -5,6 +5,7 @@ using Conf;
 using Core;
 using UnityEngine;
 using UnityEngine.UI;
+using View;
 
 public class Game : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Game : MonoBehaviour
     [SerializeField] private Button _button;
     
     private IBattle _battle;
+    private BattleView _battleView;
     
     private void GameStart()
     {
@@ -44,7 +46,8 @@ public class Game : MonoBehaviour
     
     public async Task Load(CancellationToken ct)
     {
-        _battle = new Battle(_unitContainer);
+        _battleView = new BattleView(transform, _unitContainer);
+        _battle = new Battle(_battleView);
         _button.onClick.AddListener(GameStart);
     }
 }

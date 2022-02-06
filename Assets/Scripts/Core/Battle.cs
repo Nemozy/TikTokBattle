@@ -11,11 +11,13 @@ namespace Core
     {
         private readonly MapGrid<Unit> _grid = new ();
         private readonly List<Unit> _units = new ();
-        private readonly Transform _container;
+        private readonly BattleView _battleView;
+        private int _idCounter;
     
-        public Battle(Transform container)
+        public Battle(BattleView battleView)
         {
-            _container = container;
+            _battleView = battleView;
+            _idCounter = 0;
         }
 
         public IUnit GetNearestEnemy(IUnit unit)
@@ -80,6 +82,11 @@ namespace Core
             MoveUnit(unit, (int)path.x, (int)path.y);
         }
         
+        private int GenerateUnitId()
+        {
+            return ++_idCounter;
+        }
+        
         private void LogicTick()
         {
             var dead = new List<Unit>();
@@ -139,8 +146,8 @@ namespace Core
             {
                 throw new ArgumentException($"Supplied coords ({x},{y}) already taken");
             }
-            var view = UnitView.Create(flag, _container);
-            var unit = new Unit(flag, info, view, this);
+            var unit = new Unit(flag, info, this, GenerateUnitId());
+            _battleView.OnUnitCreated(unit);
             PlaceUnit(unit, x, y);
             _units.Add(unit);
         }
@@ -156,14 +163,14 @@ namespace Core
             _grid[x, y] = unit;
             unit.X = x;
             unit.Y = y;
-            unit.View.SetPosition(x, y);
+            _battleView.OnUnitMoved(unit.Id, x, y);
         }
         
         private void DeleteUnit(Unit unit)
         {
             _grid[unit.X, unit.Y] = null;
             _units.Remove(unit);
-            unit.View.Destroy();
+            _battleView.OnUnitDestroy(unit.Id);
         }
     }
 }

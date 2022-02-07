@@ -45,7 +45,10 @@ public class LibraryCatalog
 
     private void FillUnits()
     {
-        _path.Add(LibraryCatalogNames.BLUE_TEAM_UNIT, "Prefabs/BlueTeam/Blue");
-        _path.Add(LibraryCatalogNames.RED_TEAM_UNIT, "Prefabs/RedTeam/Red");
+        _path.Add(LibraryCatalogNames.BLUE_TEAM_UNIT, "Prefabs/Units/BlueTeam/Blue");
+        _path.Add(LibraryCatalogNames.RED_TEAM_UNIT, "Prefabs/Units/RedTeam/Red");
+        _path.Add(LibraryCatalogNames.ARCHER_UNIT, "Prefabs/Units/Archer/ArcherUnit");
+        _path.Add(LibraryCatalogNames.SOLDIER_UNIT, "Prefabs/Units/Soldier/SoldierUnit");
+        _path.Add(LibraryCatalogNames.ASSASSIN_UNIT, "Prefabs/Units/Assassin/AssassinUnit");
     }
 }

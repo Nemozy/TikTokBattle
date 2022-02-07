@@ -13,6 +13,7 @@
             ManaRegen = 50;
             AttackDistance = 10;
             KillChance = 25;
+            Visual = new Internal.Visual{PrefabNameInCatalog = LibraryCatalogNames.ARCHER_UNIT};
         }
     }
 }

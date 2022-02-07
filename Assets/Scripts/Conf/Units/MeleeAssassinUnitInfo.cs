@@ -17,6 +17,7 @@
             AbilityDamageRate = 4;
             CritChance = 35;
             CritRate = 2;
+            Visual = new Internal.Visual{PrefabNameInCatalog = LibraryCatalogNames.ASSASSIN_UNIT};
         }
     }
 }

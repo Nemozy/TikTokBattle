@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
@@ -6,12 +7,21 @@ namespace View
     public class UnitView
     {
         public int Id { get;}
+        
         private readonly Transform _transform;
+        private readonly UnitMaterial _unitMaterial;
 
         public UnitView(Transform transform, int id)
         {
             _transform = transform;
             Id = id;
+            var renderers = _transform.GetComponentsInChildren<Renderer>(true).ToList();
+            _unitMaterial = new UnitMaterial(renderers);
+        }
+
+        public void SetTeamColor(Color teamColor)
+        {
+            _unitMaterial.SetTeamColor(teamColor);
         }
         
         public void SetPosition(int x, int y)

@@ -40,28 +40,28 @@ namespace View
         
         public UnitView Create(TeamFlag teamFlag, Transform parent, int id)
         {
-            GameObject unit;
-            switch (teamFlag)
-            {
-                case TeamFlag.Blue:
-                    unit = Library.Find<GameObject>(LibraryCatalogNames.BLUE_TEAM_UNIT);
-                    break;
-                
-                case TeamFlag.Red:
-                    unit = Library.Find<GameObject>(LibraryCatalogNames.RED_TEAM_UNIT);
-                    break;
-                
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(teamFlag), teamFlag, null);
-            }
-
+            var unit = Library.Find<GameObject>(LibraryCatalogNames.BLUE_TEAM_UNIT);
             if (unit == null)
             {
                 throw new Exception($"Cannot create unit view by flag type [{nameof(teamFlag)}]. Not found.");
             }
             
             var go = UnityObject.Instantiate(unit, parent, true);
-            return new UnitView(go.transform, id);
+            var unitView = new UnitView(go.transform, id);
+            switch (teamFlag)
+            {
+                case TeamFlag.Blue:
+                    unitView.SetTeamColor(Color.blue);
+                    break;
+                
+                case TeamFlag.Red:
+                    unitView.SetTeamColor(Color.red);
+                    break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(teamFlag), teamFlag, null);
+            }
+            return unitView;
         }
     }
 }

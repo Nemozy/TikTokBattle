@@ -17,6 +17,7 @@
             HealHpThresholdPercent = 25;
             HealValue = 200;
             AbilityDamageIncreaseStep = 10;
+            Visual = new Internal.Visual{PrefabNameInCatalog = LibraryCatalogNames.RED_TEAM_UNIT};
         }
     }
 }

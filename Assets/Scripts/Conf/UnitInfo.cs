@@ -8,5 +8,14 @@
         public int Speed;
         public int Damage;
         public int AttackDistance;
+        public Internal.Visual Visual;
+        
+        public static class Internal
+        {
+            public class Visual
+            {
+                public LibraryCatalogNames PrefabNameInCatalog;
+            }
+        }
     }
 }

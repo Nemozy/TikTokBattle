@@ -21,9 +21,10 @@ namespace Core
         {
             _battleView = battleView;
             _idCounter = 0;
-            BattleStatus = BattleStatus.STARTED;
+            BattleStatus = BattleStatus.LOADING;
+            Clear();
         }
-
+        
         public IUnit GetNearestEnemy(IUnit unit)
         {
             var enemies = unit.Team == TeamFlag.Red ? GetPlayerTeam() : GetRedTeam();
@@ -48,6 +49,8 @@ namespace Core
         
         public void Start(BattleInfo info)
         {
+            _idCounter = 0;
+            BattleStatus = BattleStatus.STARTED;
             foreach (var entry in info.Units)
             {
                 SpawnUnit(entry.Flag, entry.Info, entry.SpawnX, entry.SpawnY);
@@ -61,11 +64,7 @@ namespace Core
         
         public void Finish()
         {
-            while (_units.Any())
-            {
-                DeleteUnit(_units[0]);
-            }
-            _grid.Clear();
+            Clear();
         }
         
         public bool IsFinished()
@@ -90,6 +89,13 @@ namespace Core
         {
             return ++_idCounter;
         }
+
+        private void Clear()
+        {
+            DestroyAllUnits();
+            _grid.Clear();
+            _units.Clear();
+        }
         
         private void LogicTick()
         {
@@ -103,9 +109,10 @@ namespace Core
                 else
                 {
                     dead.Add(unit);
+                    _battleView.OnUnitDie(unit.Id);
                 }
             }
-            dead.ForEach(DeleteUnit);
+            dead.ForEach(OnUnitDie);
             dead.Clear();
 
             if (!GetRedTeam().Any())
@@ -161,7 +168,7 @@ namespace Core
                 throw new ArgumentException($"Supplied coords ({x},{y}) already taken");
             }
             var unit = new Unit(flag, info, this, GenerateUnitId());
-            _battleView.OnUnitCreated(unit);
+            _battleView.OnUnitCreated(unit, info);
             PlaceUnit(unit, x, y);
             _units.Add(unit);
         }
@@ -180,11 +187,15 @@ namespace Core
             _battleView.OnUnitMoved(unit.Id, x, y);
         }
         
-        private void DeleteUnit(Unit unit)
+        private void OnUnitDie(Unit unit)
         {
             _grid[unit.X, unit.Y] = null;
             _units.Remove(unit);
-            _battleView.OnUnitDestroy(unit.Id);
+        }
+
+        private void DestroyAllUnits()
+        {
+            _battleView.DestroyAllUnits();
         }
     }
 }

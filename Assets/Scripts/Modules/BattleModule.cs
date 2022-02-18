@@ -68,7 +68,7 @@ namespace Modules
             _battle.Tick();
         }
         
-        public void GameStart()
+        private void GameStart()
         {
             _battle.Start(new DemoBattleInfo());
             _battleStatus = BattleStatus.STARTED;

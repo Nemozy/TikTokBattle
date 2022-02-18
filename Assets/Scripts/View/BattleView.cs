@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Battle;
+using Conf;
 using Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,8 @@ namespace View
         [SerializeField] private Transform _unitContainer;
         [SerializeField] private Button _startBattleButton;
     
-        private readonly Dictionary<int, UnitView> _unitsView = new ();
+        private readonly SortedList<int, UnitView> _unitsViewById = new ();
+        private readonly List<UnitView> _unitsView = new ();
         
         private BattleViewModel _viewModel;
         
@@ -26,34 +28,55 @@ namespace View
             _startBattleButton.onClick.AddListener(OnStartBattleButtonClick);
         }
 
-        public void OnUnitCreated(Unit unit)
+        public void OnUnitCreated(Unit unit, UnitInfo info)
         {
-            _unitsView.Add(unit.Id, Create(unit.Team, _unitContainer, unit.Id));
+            var unitView = Create(unit.Team, _unitContainer, info.Visual, unit.Id);
+            _unitsView.Add(unitView);
+            _unitsViewById.Add(unitView.Id, unitView);
         }
 
         public void OnUnitMoved(int id, int x, int y)
         {
-            _unitsView[id].SetPosition(x, y);
+            GetUnitView(id).SetPosition(x, y);
         }
 
-        public void OnUnitDestroy(int id)
+        public void OnUnitDie(int id)
         {
-            if (!_unitsView.ContainsKey(id))
+            var unitView = GetUnitView(id);
+            if (unitView == null)
             {
                 throw new Exception($"Unit with id[{id}] already destoyed");
             }
-            _unitsView[id].Destroy();
+
+            unitView.PlayDie();
+            //unitView.Destroy();
         }
 
+        public void DestroyAllUnits()
+        {
+            foreach (var unitView in _unitsView)
+            {
+                unitView.Destroy();
+            }
+            _unitsView.Clear();
+            _unitsViewById.Clear();
+        }
+        
+        private UnitView GetUnitView(int id)
+        {
+            _unitsViewById.TryGetValue(id, out var unitView);
+            return unitView;
+        }
+        
         private void OnDestroy()
         {
             _startBattleButton.onClick.RemoveListener(OnStartBattleButtonClick);
             _viewModel.BattleStatus.OnChange -= OnBattleStatusChange;
         }
 
-        private UnitView Create(TeamFlag teamFlag, Transform parent, int id)
+        private UnitView Create(TeamFlag teamFlag, Transform parent, UnitInfo.Internal.Visual visual, int id)
         {
-            var unit = Library.Find<GameObject>(LibraryCatalogNames.BLUE_TEAM_UNIT);
+            var unit = Library.Find<GameObject>(visual.PrefabNameInCatalog);
             if (unit == null)
             {
                 throw new Exception($"Cannot create unit view by flag type [{nameof(teamFlag)}]. Not found.");

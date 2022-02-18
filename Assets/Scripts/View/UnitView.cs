@@ -14,6 +14,7 @@ namespace View
         public UnitView(Transform transform, int id)
         {
             _transform = transform;
+            _transform.gameObject.SetActive(true);
             Id = id;
             var renderers = _transform.GetComponentsInChildren<Renderer>(true).ToList();
             _unitMaterial = new UnitMaterial(renderers);
@@ -29,6 +30,11 @@ namespace View
             _transform.localPosition = new Vector3(x, _transform.localPosition.y, y);          
         }
 
+        public void PlayDie()
+        {
+            _transform.gameObject.SetActive(false);
+        }
+        
         public void Destroy()
         {
             UnityObject.Destroy(_transform.gameObject);

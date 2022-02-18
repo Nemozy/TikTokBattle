@@ -17,7 +17,7 @@ namespace Conf
 
         protected void AddBlue(UnitInfo info, int spawnX, int spawnY)
         {
-            Add(TeamFlag.Blue, info, spawnX, spawnY);
+            Add(TeamFlag.Player, info, spawnX, spawnY);
         }
 
         protected void AddRed(UnitInfo info, int spawnX, int spawnY)

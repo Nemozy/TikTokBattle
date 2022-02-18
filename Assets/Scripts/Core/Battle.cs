@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Battle;
 using Conf;
 using UnityEngine;
 using View;
@@ -9,26 +10,29 @@ namespace Core
 {
     public class Battle : ICore, IBattle
     {
+        public BattleStatus BattleStatus { get; private set; }
+
         private readonly MapGrid<Unit> _grid = new ();
         private readonly List<Unit> _units = new ();
         private readonly BattleView _battleView;
         private int _idCounter;
-    
+        
         public Battle(BattleView battleView)
         {
             _battleView = battleView;
             _idCounter = 0;
+            BattleStatus = BattleStatus.STARTED;
         }
 
         public IUnit GetNearestEnemy(IUnit unit)
         {
-            var enemies = unit.Team == TeamFlag.Red ? GetBlueTeam() : GetRedTeam();
+            var enemies = unit.Team == TeamFlag.Red ? GetPlayerTeam() : GetRedTeam();
             return GetNearestAtTeam(unit, enemies);
         }
 
         public IUnit GetNearestFriend(IUnit unit)
         {
-            var friends = unit.Team == TeamFlag.Red ? GetRedTeam() : GetBlueTeam();
+            var friends = unit.Team == TeamFlag.Red ? GetRedTeam() : GetPlayerTeam();
             return GetNearestAtTeam(unit, friends);
         }
         
@@ -66,7 +70,7 @@ namespace Core
         
         public bool IsFinished()
         {
-            return !GetRedTeam().Any() || !GetBlueTeam().Any();
+            return !GetRedTeam().Any() || !GetPlayerTeam().Any();
         }
 
         public void AskMoveUnitTo(Unit unit, int toX, int toY)
@@ -103,6 +107,16 @@ namespace Core
             }
             dead.ForEach(DeleteUnit);
             dead.Clear();
+
+            if (!GetRedTeam().Any())
+            {
+                BattleStatus = BattleStatus.FINISHED_WON;
+                return;
+            }
+            if (!GetPlayerTeam().Any())
+            {
+                BattleStatus = BattleStatus.FINISHED_LOST;
+            }
         }
 
         private bool IsCellTaken(Vector2 position)
@@ -115,9 +129,9 @@ namespace Core
             return _units.Where(u => u.Team == TeamFlag.Red && u.IsAlive());
         }
 
-        private IEnumerable<IUnit> GetBlueTeam()
+        private IEnumerable<IUnit> GetPlayerTeam()
         {
-            return _units.Where(u => u.Team == TeamFlag.Blue && u.IsAlive());
+            return _units.Where(u => u.Team == TeamFlag.Player && u.IsAlive());
         }
         
         private IUnit GetNearestAtTeam(IUnit unit, IEnumerable<IUnit> team)

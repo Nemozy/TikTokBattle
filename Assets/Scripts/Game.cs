@@ -1,53 +1,47 @@
 ﻿using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
-using Conf;
-using Core;
-using UnityEngine;
-using UnityEngine.UI;
-using View;
+using Modules;
 
-public class Game : MonoBehaviour
+public class Game
 {
-    [SerializeField] private Transform _unitContainer;
-    [SerializeField] private Button _button;
+    private ModuleManager _moduleManager;
+    private GameLoopComponent _gameLoopComponent;
     
-    private IBattle _battle;
-    private BattleView _battleView;
-    
-    private void GameStart()
+    public void Connect(GameLoopComponent gameLoopComponent)
     {
-        _button.gameObject.SetActive(false);
-        _battle.Start(new DemoBattleInfo());
-        StartCoroutine(GamePlay());
+        _gameLoopComponent = gameLoopComponent;
+        _moduleManager = new ModuleManager();
     }
 
-    private void GameOver()
+    public void OnApplicationQuit()
     {
-        _battle.Finish();
-        _button.gameObject.SetActive(true);
-    }
-    
-    private IEnumerator GamePlay()
-    {
-        while(!_battle.IsFinished())
-        {
-            _battle.Tick();
-            yield return new WaitForSeconds(0.5f);
-        }
-        GameOver();
-    }
-     
-    private void OnApplicationQuit()
-    {
-        _button.onClick.RemoveListener(GameStart);
-        StopAllCoroutines();
+        StopLogicTick();
+        _moduleManager.StopGame();
     }
     
     public async Task Load(CancellationToken ct)
     {
-        _battleView = new BattleView(transform, _unitContainer);
-        _battle = new Battle(_battleView);
-        _button.onClick.AddListener(GameStart);
+        await _moduleManager.LoadBattleModule(ct);
+        _moduleManager.CurrentModule.Connect();
+        StartLogicTick();
+    }
+
+    private void StartLogicTick()
+    {
+        _gameLoopComponent.AddCoroutineAndStart(LogicTick());
+    }
+
+    private void StopLogicTick()
+    {
+        _gameLoopComponent.StopAndRemoveCoroutine(LogicTick());
+    }
+
+    private IEnumerator LogicTick()
+    {
+        while (true)
+        {
+            yield return _moduleManager.TickModule();
+        }
     }
 }

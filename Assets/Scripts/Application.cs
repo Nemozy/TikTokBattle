@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Application : MonoBehaviour
 {
-    [SerializeField] private GameObject _gamePrefab;
     private Game _game;
-
-    private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+    private GameLoopComponent _gameLoopComponent;
+    private readonly CancellationTokenSource _cts = new ();
     
     private void Awake()
     {
         DontDestroyOnLoad(this);
         UnityEngine.Application.targetFrameRate = 60;
+        _gameLoopComponent = gameObject.GetComponent<GameLoopComponent>();
     }
     
     private void Start()
@@ -22,17 +22,20 @@ public class Application : MonoBehaviour
     
     private async void Launch()
     {
-        var game = Instantiate(_gamePrefab, transform).GetComponent<Game>();
         try
         {
             await Library.Load(_cts.Token);
+            var game = new Game();
+            game.Connect(_gameLoopComponent);
             await game.Load(_cts.Token);
             _game = game;
         }
         catch (Exception e)
         {
             Debug.LogError(e);
-            Destroy(game.gameObject);
+            _game?.OnApplicationQuit();
+            _gameLoopComponent.StopCoroutines();
+            _game = null;
         }
     }
 }

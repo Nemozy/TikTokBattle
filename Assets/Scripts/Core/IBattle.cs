@@ -1,12 +1,10 @@
-using Conf;
+using Battle;
 
 namespace Core
 {
     public interface IBattle
     {
-        void Start(BattleInfo info);
-        void Tick();
-        void Finish();
+        BattleStatus BattleStatus { get; }
         bool IsFinished();
     }
 }

@@ -15,7 +15,7 @@ namespace Core
             Die
         }
 
-        private readonly UnitInfo _info;
+        //private readonly UnitInfo _info;
         private readonly UnitLogic _logic;
         private readonly Battle _battle;
         
@@ -32,17 +32,18 @@ namespace Core
         public int X { get; set; }
         public int Y { get; set; }
 
-        public int MaxHealth => _info.MaxHealth;
+        public int MaxHealth { get; }
         public int Health { get; private set; }
-        public int MaxMana => _info.MaxMana;
+        public int MaxMana { get; }
         public int Mana { get; private set; }
-        public int Speed => _info.Speed;
+        public int Speed { get; }
 
         public Unit(TeamFlag team, UnitInfo info, Battle battle, int id)
         {
             Team = team;
-            _info = info;
-            
+            MaxMana = info.MaxMana;
+            MaxHealth = info.MaxHealth;
+            Speed = info.Speed;
             Health = MaxHealth;
             Mana = 0;
             

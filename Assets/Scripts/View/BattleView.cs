@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ViewModel;
 using UnityObject = UnityEngine.Object;
+using UnitVisual = Conf.UnitInfo.Internal.Visual;
 
 namespace View
 {
@@ -74,7 +75,7 @@ namespace View
             _viewModel.BattleStatus.OnChange -= OnBattleStatusChange;
         }
 
-        private UnitView Create(TeamFlag teamFlag, Transform parent, UnitInfo.Internal.Visual visual, int id)
+        private UnitView Create(TeamFlag teamFlag, Transform parent, UnitVisual visual, int id)
         {
             var unit = Library.Find<GameObject>(visual.PrefabNameInCatalog);
             if (unit == null)

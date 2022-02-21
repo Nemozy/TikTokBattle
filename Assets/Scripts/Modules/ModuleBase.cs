@@ -1,17 +1,19 @@
-﻿namespace Modules
+﻿using System.Threading.Tasks;
+
+namespace Modules
 {
     public abstract class ModuleBase
     {
-        public virtual void Connect()
-        {
-        }
-        
+        public abstract Task Connect();
+        public abstract Task Stop();
+
         public virtual void Tick()
         {
         }
-
-        public virtual void Stop()
+        
+        public virtual Task PreloadAssets()
         {
+            return Task.CompletedTask;
         }
     }
 }

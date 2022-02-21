@@ -23,7 +23,12 @@ public class Game
     public async Task Load(CancellationToken ct)
     {
         await _moduleManager.LoadBattleModule(ct);
-        _moduleManager.CurrentModule.Connect();
+        await _moduleManager.CurrentModule.PreloadAssets();
+        await _moduleManager.CurrentModule.Connect();
+    }
+
+    public void Start()
+    {
         StartLogicTick();
     }
 

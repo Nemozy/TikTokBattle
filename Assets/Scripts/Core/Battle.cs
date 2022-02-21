@@ -165,7 +165,7 @@ namespace Core
         {
             if (_grid[x, y] != null)
             {
-                throw new ArgumentException($"Supplied coords ({x},{y}) already taken");
+                throw new ArgumentException($"Supplied coordinates ({x},{y}) already taken");
             }
             var unit = new Unit(flag, info, this, GenerateUnitId());
             _battleView.OnUnitCreated(unit, info);

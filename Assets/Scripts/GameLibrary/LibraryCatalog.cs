@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class LibraryCatalog
 {
@@ -32,22 +34,21 @@ public class LibraryCatalog
 
     private async Task LoadEntity(LibraryCatalogNames key, CancellationToken ct)
     {
-        var handle = Resources.LoadAsync<GameObject>(_path[key]);
-        while (!handle.isDone)
+        var handle = Addressables.LoadAssetAsync<GameObject>(_path[key]);
+        await handle.Task;
+        if (handle.Status == AsyncOperationStatus.Succeeded)
         {
-            await Task.Yield();
+            var gameObject = handle.Result;
+            _all.Add(key, gameObject);
         }
-
-        var go = (GameObject)handle.asset;
-        _all.Add(key, go);
     }
 
     private void FillUnits()
     {
-        _path.Add(LibraryCatalogNames.BLUE_TEAM_UNIT, "Prefabs/Units/BlueTeam/Blue");
-        _path.Add(LibraryCatalogNames.RED_TEAM_UNIT, "Prefabs/Units/RedTeam/Red");
-        _path.Add(LibraryCatalogNames.ARCHER_UNIT, "Prefabs/Units/Archer/ArcherUnit");
-        _path.Add(LibraryCatalogNames.SOLDIER_UNIT, "Prefabs/Units/Soldier/SoldierUnit");
-        _path.Add(LibraryCatalogNames.ASSASSIN_UNIT, "Prefabs/Units/Assassin/AssassinUnit");
+        _path.Add(LibraryCatalogNames.BLUE_TEAM_UNIT, "Assets/Media/Prefabs/Units/BlueTeam/Blue.prefab");
+        _path.Add(LibraryCatalogNames.RED_TEAM_UNIT, "Assets/Media/Prefabs/Units/RedTeam/Red.prefab");
+        _path.Add(LibraryCatalogNames.ARCHER_UNIT, "Assets/Media/Prefabs/Units/Archer/ArcherUnit.prefab");
+        _path.Add(LibraryCatalogNames.SOLDIER_UNIT, "Assets/Media/Prefabs/Units/Soldier/SoldierUnit.prefab");
+        _path.Add(LibraryCatalogNames.ASSASSIN_UNIT, "Assets/Media/Prefabs/Units/Assassin/AssassinUnit.prefab");
     }
 }

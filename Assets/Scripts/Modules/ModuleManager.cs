@@ -12,6 +12,7 @@ namespace Modules
         public async Task LoadBattleModule(CancellationToken ct)
         {
             CurrentModule = new BattleModule();
+            await Task.CompletedTask;
         }
 
         public IEnumerator TickModule()

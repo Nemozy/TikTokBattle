@@ -1,8 +1,13 @@
-﻿using Battle;
+﻿using System;
+using System.Threading.Tasks;
+using Battle;
 using Conf;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using View;
 using ViewModel;
+using Object = UnityEngine.Object;
 
 namespace Modules
 {
@@ -12,29 +17,32 @@ namespace Modules
         private BattleViewModel _battleViewModel;
         private BattleStatus _battleStatus;
         
-        private static BattleView CreateView()
+        private async Task<BattleView> CreateView()
         {
-            var viewPrefab = Resources.Load<GameObject>("Prefabs/Battle/BattleView");
-            var view = Object.Instantiate(viewPrefab);
+            var handle = Addressables.LoadAssetAsync<GameObject>("Assets/Media/Prefabs/Battle/BattleView.prefab");
+            await handle.Task;
+            if (handle.Status == AsyncOperationStatus.Succeeded) 
+            {
+                var view = Object.Instantiate(handle.Result);
+                return view.GetComponent<BattleView>();
+            }
             
-            return view.GetComponent<BattleView>();
+            throw new Exception(handle.OperationException.Message);
         }
-
-        public BattleModule()
+        
+        public override async Task Connect()
         {
             _battleStatus = BattleStatus.LOADING;
-            var battleView = CreateView();
+            var battleViewCreatingTask = CreateView();
+            await battleViewCreatingTask;
+            
+            var battleView = battleViewCreatingTask.Result;
             //TODO: убрать ссылку на вьюшку
             _battle = new Core.Battle(battleView);
             _battleViewModel = new BattleViewModel(_battle, GameStart);
-            /*_battleView.Init();
-            _battleView.SetSceneCamera(sceneCamera);*/
+            //_battleView.Init();
+            //_battleView.SetSceneCamera(sceneCamera);
             battleView.Connect(_battleViewModel);
-        }
-        
-        public override void Connect()
-        {
-            base.Connect();
         }
 
         public override void Tick()
@@ -44,11 +52,12 @@ namespace Modules
             OnTick();
         }
 
-        public override void Stop()
+        public override Task Stop()
         {
             //TODO: передать в _battle информацию, что бой закончен.
             _battleStatus = BattleStatus.FINISHED_LOST;
             GameOver();
+            return Task.CompletedTask;
         }
         
         private void OnTick()

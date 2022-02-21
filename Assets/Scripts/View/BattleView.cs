@@ -50,7 +50,6 @@ namespace View
             }
 
             unitView.PlayDie();
-            //unitView.Destroy();
         }
 
         public void DestroyAllUnits()
@@ -82,8 +81,8 @@ namespace View
             {
                 throw new Exception($"Cannot create unit view by flag type [{nameof(teamFlag)}]. Not found.");
             }
-            
-            var go = UnityObject.Instantiate(unit, parent, true);
+
+            var go = Instantiate(unit, parent, true);
             var unitView = new UnitView(go.transform, id);
             switch (teamFlag)
             {

@@ -29,6 +29,7 @@ public class Application : MonoBehaviour
             game.Connect(_gameLoopComponent);
             await game.Load(_cts.Token);
             _game = game;
+            _game.Start();
         }
         catch (Exception e)
         {

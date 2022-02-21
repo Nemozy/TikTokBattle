@@ -3,23 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using Battle;
 using Conf;
+using Model;
 using UnityEngine;
-using View;
+using ViewModel;
 
 namespace Core
 {
     public class Battle : ICore, IBattle
     {
-        public BattleStatus BattleStatus { get; private set; }
+        public BattleStatus BattleStatus
+        {
+            get => _battleStatus;
+            private set
+            {
+                _battleStatus = value;
+                _battleViewModel.BattleStatus.Set(value);
+            }
+        }
 
         private readonly MapGrid<Unit> _grid = new ();
         private readonly List<Unit> _units = new ();
-        private readonly BattleView _battleView;
+        private readonly BattleViewModel _battleViewModel;
         private int _idCounter;
+        private BattleStatus _battleStatus;
         
-        public Battle(BattleView battleView)
+        public Battle(BattleViewModel battleViewModel)
         {
-            _battleView = battleView;
+            _battleViewModel = battleViewModel;
             _idCounter = 0;
             BattleStatus = BattleStatus.LOADING;
             Clear();
@@ -62,8 +72,9 @@ namespace Core
             LogicTick();
         }
         
-        public void Finish()
+        public void Finish(bool won)
         {
+            BattleStatus = won ? BattleStatus.FINISHED_WON : BattleStatus.FINISHED_LOST;
             Clear();
         }
         
@@ -109,7 +120,7 @@ namespace Core
                 else
                 {
                     dead.Add(unit);
-                    _battleView.OnUnitDie(unit.Id);
+                    _battleViewModel.OnUnitDie.Set(unit.Id);
                 }
             }
             dead.ForEach(OnUnitDie);
@@ -131,12 +142,12 @@ namespace Core
             return _grid[(int) position.x, (int) position.y] != null;
         }
 
-        private IEnumerable<IUnit> GetRedTeam()
+        public IEnumerable<IUnit> GetRedTeam()
         {
             return _units.Where(u => u.Team == TeamFlag.Red && u.IsAlive());
         }
 
-        private IEnumerable<IUnit> GetPlayerTeam()
+        public IEnumerable<IUnit> GetPlayerTeam()
         {
             return _units.Where(u => u.Team == TeamFlag.Player && u.IsAlive());
         }
@@ -168,7 +179,7 @@ namespace Core
                 throw new ArgumentException($"Supplied coordinates ({x},{y}) already taken");
             }
             var unit = new Unit(flag, info, this, GenerateUnitId());
-            _battleView.OnUnitCreated(unit, info);
+            _battleViewModel.OnUnitCreated.Set((unit, info));
             PlaceUnit(unit, x, y);
             _units.Add(unit);
         }
@@ -184,7 +195,7 @@ namespace Core
             _grid[x, y] = unit;
             unit.X = x;
             unit.Y = y;
-            _battleView.OnUnitMoved(unit.Id, x, y);
+            _battleViewModel.OnUnitMoved.Set((unit.Id, x, y));
         }
         
         private void OnUnitDie(Unit unit)
@@ -195,7 +206,7 @@ namespace Core
 
         private void DestroyAllUnits()
         {
-            _battleView.DestroyAllUnits();
+            _battleViewModel.OnDestroyAllUnits?.Invoke();
         }
     }
 }

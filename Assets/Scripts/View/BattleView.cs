@@ -27,32 +27,37 @@ namespace View
             _viewModel.BattleStatus.OnChange += OnBattleStatusChange;
             _startBattleButton.gameObject.SetActive(true);
             _startBattleButton.onClick.AddListener(OnStartBattleButtonClick);
+            _viewModel.OnDestroyAllUnits += DestroyAllUnits;
+            _viewModel.OnUnitCreated.OnChange += OnUnitCreatedHandler;
+            _viewModel.OnUnitDie.OnChange += OnUnitDieHandler;
+            _viewModel.OnUnitMoved.OnChange += OnUnitMovedHandler;
         }
 
-        public void OnUnitCreated(Unit unit, UnitInfo info)
+        private void OnUnitMovedHandler((int, int, int) value)
         {
-            var unitView = Create(unit.Team, _unitContainer, info.Visual, unit.Id);
+            var unitId = value.Item1;
+            var posX = value.Item2;
+            var posY = value.Item3;
+            var unitView = GetUnitView(unitId);
+            unitView.SetPosition(posX, posY);
+        }
+
+        private void OnUnitDieHandler(int unitId)
+        {
+            var unitView = GetUnitView(unitId);
+            unitView.PlayDie();
+        }
+
+        private void OnUnitCreatedHandler((Unit, UnitInfo) value)
+        {
+            var unit = value.Item1;
+            var unitInfo = value.Item2;
+            var unitView = Create(unit.Team, _unitContainer, unitInfo.Visual, unit.Id);
             _unitsView.Add(unitView);
             _unitsViewById.Add(unitView.Id, unitView);
         }
 
-        public void OnUnitMoved(int id, int x, int y)
-        {
-            GetUnitView(id).SetPosition(x, y);
-        }
-
-        public void OnUnitDie(int id)
-        {
-            var unitView = GetUnitView(id);
-            if (unitView == null)
-            {
-                throw new Exception($"Unit with id[{id}] already destoyed");
-            }
-
-            unitView.PlayDie();
-        }
-
-        public void DestroyAllUnits()
+        private void DestroyAllUnits()
         {
             foreach (var unitView in _unitsView)
             {
@@ -65,6 +70,10 @@ namespace View
         private UnitView GetUnitView(int id)
         {
             _unitsViewById.TryGetValue(id, out var unitView);
+            if (unitView == null)
+            {
+                throw new Exception($"Unit with id[{id}] not found.");
+            }
             return unitView;
         }
         
@@ -111,7 +120,7 @@ namespace View
         private void OnStartBattleButtonClick()
         {
             _startBattleButton.gameObject.SetActive(false);
-            _viewModel.GameStart();
+            _viewModel.OnGameStart.Value.Invoke();
         }
     }
 }

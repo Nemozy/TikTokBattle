@@ -1,5 +1,6 @@
 ﻿using System;
 using Battle;
+using Conf;
 using Core;
 using Model;
 
@@ -8,28 +9,11 @@ namespace ViewModel
     public class BattleViewModel
     {
         public readonly Observable<BattleStatus> BattleStatus = new ();
+        public readonly Observable<(Unit, UnitInfo)> OnUnitCreated = new ();
+        public readonly Observable<int> OnUnitDie = new ();
+        public readonly Observable<(int, int, int)> OnUnitMoved = new ();
+        public readonly Observable<Action> OnGameStart = new ();
         
-        private readonly IBattle _battle;
-        private Action _gameStartCallback;
-
-        public BattleViewModel(IBattle battle, Action gameStartCallback)
-        {
-            _battle = battle;
-            _gameStartCallback = gameStartCallback;
-            BattleStatus.Set(Battle.BattleStatus.LOADING);
-        }
-
-        public void OnTick()
-        {
-            if (BattleStatus != _battle.BattleStatus)
-            {
-                BattleStatus.Set(_battle.BattleStatus);
-            }
-        }
-        
-        public void GameStart()
-        {
-            _gameStartCallback?.Invoke();
-        }
+        public Action OnDestroyAllUnits;
     }
 }

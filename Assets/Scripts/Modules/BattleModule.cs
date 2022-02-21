@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Battle;
 using Conf;
@@ -15,7 +16,6 @@ namespace Modules
     {
         private Core.Battle _battle;
         private BattleViewModel _battleViewModel;
-        private BattleStatus _battleStatus;
         
         private async Task<BattleView> CreateView()
         {
@@ -32,14 +32,13 @@ namespace Modules
         
         public override async Task Connect()
         {
-            _battleStatus = BattleStatus.LOADING;
             var battleViewCreatingTask = CreateView();
             await battleViewCreatingTask;
             
             var battleView = battleViewCreatingTask.Result;
-            //TODO: убрать ссылку на вьюшку
-            _battle = new Core.Battle(battleView);
-            _battleViewModel = new BattleViewModel(_battle, GameStart);
+            _battleViewModel = new BattleViewModel();
+            _battleViewModel.OnGameStart.Set(GameStart);
+            _battle = new Core.Battle(_battleViewModel);
             //_battleView.Init();
             //_battleView.SetSceneCamera(sceneCamera);
             battleView.Connect(_battleViewModel);
@@ -54,40 +53,31 @@ namespace Modules
 
         public override Task Stop()
         {
-            //TODO: передать в _battle информацию, что бой закончен.
-            _battleStatus = BattleStatus.FINISHED_LOST;
-            GameOver();
+            GameOver(false);
             return Task.CompletedTask;
         }
         
         private void OnTick()
         {
-            _battleViewModel.OnTick();
-            
-            if (_battleStatus != BattleStatus.STARTED)
+            if (_battle.BattleStatus != BattleStatus.STARTED)
             {
-                return;
-            }
-            if(_battle.IsFinished())
-            {
-                GameOver();
-                
                 return;
             }
             _battle.Tick();
+            if(_battle.IsFinished())
+            {
+                GameOver(_battle.GetPlayerTeam().Any());
+            }
         }
         
         private void GameStart()
         {
             _battle.Start(new DemoBattleInfo());
-            _battleStatus = BattleStatus.STARTED;
         }
     
-        private void GameOver()
+        private void GameOver(bool won)
         {
-            _battle.Finish();
-            //TODO: брать из боя результат победа или поражение
-            _battleStatus = BattleStatus.FINISHED_LOST;
+            _battle.Finish(won);
         }
     }
 }

@@ -12,11 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: BattleAssetsPackege
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: BattleAssetsPackege
   m_Data:
     m_SerializedData: []
   m_GUID: 9a5c15226d617894abdd1d08c61ceb45
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 943b5f988c4d3d44092b46c88611bb80
+    m_Address: Assets/Media/Prefabs/Battle/BattleView.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 321bc80b0208ee94e81f17d327c3a19f
+    m_Address: Assets/Media/Prefabs/Units/Assassin/AssassinUnit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 98afd4ea6c2d4304a86ea0aeb4345138
+    m_Address: Assets/Media/Prefabs/Units/BlueTeam/Blue.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: aec053682339d114d8caeb59956587ae
+    m_Address: Assets/Media/Prefabs/Units/Archer/ArcherUnit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d144b68b56019f8488982690324e696c
+    m_Address: Assets/Media/Prefabs/Units/RedTeam/Red.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b56de90d7318755479cbe9e47e99dbd9
+    m_Address: Assets/Media/Prefabs/Units/Soldier/SoldierUnit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a68ced75ac948f54d9cd6a9dd721fce9
+    m_Address: Assets/Media/Prefabs/Pool.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a2f7b658ca47db847bb2273786d2439e, type: 2}
   m_SchemaSet:

@@ -4,7 +4,7 @@
     {
         public int AbilityDamageRate;
         
-        public MeleeSoldierUnitInfo()
+        public MeleeSoldierUnitInfo() : base(LibraryCatalogNames.SOLDIER_UNIT)
         {
             MaxHealth = 1000;
             MaxMana = 100;

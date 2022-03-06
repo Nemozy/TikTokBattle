@@ -6,7 +6,7 @@
         public int CritChance;
         public int CritRate;
         
-        public MeleeAssassinUnitInfo()
+        public MeleeAssassinUnitInfo() : base(LibraryCatalogNames.ASSASSIN_UNIT)
         {
             MaxHealth = 350;
             MaxMana = 100;

@@ -14,6 +14,6 @@ namespace ViewModel
         public readonly Observable<(int, int, int)> OnUnitMoved = new ();
         public readonly Observable<Action> OnGameStart = new ();
         
-        public Action OnDestroyAllUnits;
+        public Action OnClearAllUnits;
     }
 }

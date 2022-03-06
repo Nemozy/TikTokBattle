@@ -31,7 +31,7 @@ namespace Core
         {
             _battleViewModel = battleViewModel;
             _idCounter = 0;
-            BattleStatus = BattleStatus.LOADING;
+            BattleStatus = BattleStatus.Loading;
             Clear();
         }
         
@@ -60,7 +60,7 @@ namespace Core
         public void Start(BattleInfo info)
         {
             _idCounter = 0;
-            BattleStatus = BattleStatus.STARTED;
+            BattleStatus = BattleStatus.Started;
             foreach (var entry in info.Units)
             {
                 SpawnUnit(entry.Flag, entry.Info, entry.SpawnX, entry.SpawnY);
@@ -74,7 +74,7 @@ namespace Core
         
         public void Finish(bool won)
         {
-            BattleStatus = won ? BattleStatus.FINISHED_WON : BattleStatus.FINISHED_LOST;
+            BattleStatus = won ? BattleStatus.FinishedWon : BattleStatus.FinishedLost;
             Clear();
         }
         
@@ -128,12 +128,12 @@ namespace Core
 
             if (!GetRedTeam().Any())
             {
-                BattleStatus = BattleStatus.FINISHED_WON;
+                BattleStatus = BattleStatus.FinishedWon;
                 return;
             }
             if (!GetPlayerTeam().Any())
             {
-                BattleStatus = BattleStatus.FINISHED_LOST;
+                BattleStatus = BattleStatus.FinishedLost;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Core
 
         private void DestroyAllUnits()
         {
-            _battleViewModel.OnDestroyAllUnits?.Invoke();
+            _battleViewModel.OnClearAllUnits?.Invoke();
         }
     }
 }

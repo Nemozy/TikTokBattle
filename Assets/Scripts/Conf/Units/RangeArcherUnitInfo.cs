@@ -4,7 +4,7 @@
     {
         public int KillChance;
         
-        public RangeArcherUnitInfo()
+        public RangeArcherUnitInfo() : base(LibraryCatalogNames.ARCHER_UNIT)
         {
             MaxHealth = 270;
             MaxMana = 100;

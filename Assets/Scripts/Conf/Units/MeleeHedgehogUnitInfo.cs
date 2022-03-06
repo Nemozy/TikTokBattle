@@ -6,7 +6,7 @@
         public int HealValue;
         public int AbilityDamageIncreaseStep;
 
-        public MeleeHedgehogUnitInfo()
+        public MeleeHedgehogUnitInfo() : base(LibraryCatalogNames.RED_TEAM_UNIT)
         {
             MaxHealth = 2500;
             MaxMana = 100;

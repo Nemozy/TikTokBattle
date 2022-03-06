@@ -5,16 +5,13 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+//Класс остался для конфижных сущностей. Пока не удаляю.
 public class LibraryCatalog
 {
     private readonly Dictionary<LibraryCatalogNames, GameObject> _all = new ();
     private readonly Dictionary<LibraryCatalogNames, string> _path = new ();
+    private readonly List<Task> _tasksTmp = new();
     
-    public LibraryCatalog()
-    {
-        FillUnits();
-    }
-
     public IDictionary<LibraryCatalogNames, GameObject> GetDictionaryAll()
     {
         return _all;
@@ -22,14 +19,21 @@ public class LibraryCatalog
     
     public async Task Load(CancellationToken ct)
     {
-        var tasks = new List<Task>();
         foreach (var key in _path.Keys)
         {
             var task = LoadEntity(key, ct);
-            tasks.Add(task);
+            _tasksTmp.Add(task);
         }
-        
-        await Task.WhenAll(tasks);
+        _path.Clear();
+        await Task.WhenAll(_tasksTmp);
+        _tasksTmp.Clear();
+    }
+
+    public async Task LoadEntity(LibraryCatalogNames key, string path, CancellationToken ct)
+    {
+        _tasksTmp.Add(LoadEntity(key, ct));
+        await Task.WhenAll(_tasksTmp);
+        _tasksTmp.Clear();
     }
 
     private async Task LoadEntity(LibraryCatalogNames key, CancellationToken ct)
@@ -41,14 +45,5 @@ public class LibraryCatalog
             var gameObject = handle.Result;
             _all.Add(key, gameObject);
         }
-    }
-
-    private void FillUnits()
-    {
-        _path.Add(LibraryCatalogNames.BLUE_TEAM_UNIT, "Assets/Media/Prefabs/Units/BlueTeam/Blue.prefab");
-        _path.Add(LibraryCatalogNames.RED_TEAM_UNIT, "Assets/Media/Prefabs/Units/RedTeam/Red.prefab");
-        _path.Add(LibraryCatalogNames.ARCHER_UNIT, "Assets/Media/Prefabs/Units/Archer/ArcherUnit.prefab");
-        _path.Add(LibraryCatalogNames.SOLDIER_UNIT, "Assets/Media/Prefabs/Units/Soldier/SoldierUnit.prefab");
-        _path.Add(LibraryCatalogNames.ASSASSIN_UNIT, "Assets/Media/Prefabs/Units/Assassin/AssassinUnit.prefab");
     }
 }

@@ -1,22 +1,22 @@
 using System.Linq;
+using Pool;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 namespace View
 {
-    public class UnitView
+    public class UnitView : BaseView
     {
-        public int Id { get;}
+        public int Id { get; private set; }
         
-        private readonly Transform _transform;
-        private readonly UnitMaterial _unitMaterial;
+        private UnitMaterial _unitMaterial;
 
-        public UnitView(Transform transform, int id)
+        public void Connect(int id, PoolObjectType unitType)
         {
-            _transform = transform;
-            _transform.gameObject.SetActive(true);
+            base.Connect(unitType);
+            
             Id = id;
-            var renderers = _transform.GetComponentsInChildren<Renderer>(true).ToList();
+            var renderers = transform.GetComponentsInChildren<Renderer>(true).ToList();
             _unitMaterial = new UnitMaterial(renderers);
         }
 
@@ -27,17 +27,17 @@ namespace View
         
         public void SetPosition(int x, int y)
         {
-            _transform.localPosition = new Vector3(x, _transform.localPosition.y, y);          
+            transform.localPosition = new Vector3(x, transform.localPosition.y, y);          
         }
 
         public void PlayDie()
         {
-            _transform.gameObject.SetActive(false);
+            Release();
         }
-        
-        public void Destroy()
+
+        public void Release()
         {
-            UnityObject.Destroy(_transform.gameObject);
+            GamePool.Pool.Release(this);
         }
     }
 }

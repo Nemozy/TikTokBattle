@@ -15,7 +15,6 @@ namespace Core
             Die
         }
 
-        //private readonly UnitInfo _info;
         private readonly UnitLogic _logic;
         private readonly Battle _battle;
         
@@ -23,8 +22,6 @@ namespace Core
         
         private int _destX;
         private int _destY;
-        
-        //public readonly UnitView View;
         
         public TeamFlag Team { get; }
         
@@ -49,7 +46,6 @@ namespace Core
             
             _logic = UnitLogicFactory.Create(info, this, battle);
             
-            //View = view;
             _battle = battle;
             _state = State.Spawn;
             Id = id;

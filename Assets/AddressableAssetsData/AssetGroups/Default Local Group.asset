@@ -16,7 +16,35 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 57448a0327d0d4b4b97a6560bff80efe
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: cf336fdb4119bee418448b646eef6c34
+    m_Address: Assets/Assets/Prefabs/Units/Archer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 679a761e85125a44d849acd2648aedb5
+    m_Address: Assets/Assets/Prefabs/Units/Assassin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: eaeec328c1270f949a3a448d32f5e315
+    m_Address: Assets/Assets/Prefabs/Units/BlueTeam
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1abfd32287226e84089ea73470cc3492
+    m_Address: Assets/Assets/Prefabs/Units/RedTeam
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 837206cd199ac3e40a97bfdcebd2d0e8
+    m_Address: Assets/Assets/Prefabs/Units/Soldier
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: cfc4054382429db4694e6c822a8a925f
+    m_Address: Assets/Scenes/City.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5c16fc71a5673524abe7c303c4a6a8d7
+    m_Address: Assets/Scenes/Battle.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a2f7b658ca47db847bb2273786d2439e, type: 2}
   m_SchemaSet:

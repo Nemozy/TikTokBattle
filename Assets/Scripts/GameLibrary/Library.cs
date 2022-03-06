@@ -18,7 +18,7 @@ public class Library
             All.Add(entity);
         }
     }
-    
+
     public static LibraryEntity Find(System.Type type, LibraryCatalogNames name)
     {
         return All.Find(e=> e.Type == type && e.Name == name);

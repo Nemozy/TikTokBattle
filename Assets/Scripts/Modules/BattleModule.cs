@@ -59,7 +59,7 @@ namespace Modules
         
         private void OnTick()
         {
-            if (_battle.BattleStatus != BattleStatus.STARTED)
+            if (_battle.BattleStatus != BattleStatus.Started)
             {
                 return;
             }

@@ -1,6 +1,6 @@
 ﻿public class LibraryEntity
 {
-    public LibraryCatalogNames Name;
+    public readonly LibraryCatalogNames Name;
     public readonly System.Type Type;
     public readonly System.Object Object;
     
